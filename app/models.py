@@ -11,6 +11,9 @@ class User(UserMixin, db.Model):
     password =  db.Column(db.String)
     created_on = db.Column(db.DateTime, default=dt.utcnow)
 
+    icon = db.Column(db.Integer)
+
+
     # should return a unique identifing string
     def __repr__(self):
         return f'<User: {self.email} | {self.id}>'
@@ -32,11 +35,15 @@ class User(UserMixin, db.Model):
         self.last_name = data['last_name']
         self.email=data['email']
         self.password = self.hash_password(data['password'])
+        self.icon = data['icon']
 
     # save the user to the database
     def save(self):
         db.session.add(self) #adds the user to the db session
         db.session.commit() #save everythig in the session to the db
+
+    def get_icon(self):
+        return f'https://avatars.dicebear.com/api/avataaars/{self.icon}.svg'
     
 @login.user_loader
 def load_user(id):
